@@ -1,9 +1,20 @@
 #!/bin/bash
 
+# This is a script for formatting messenger logs from a fb data dump
+# Usage is : ./formatlogs messages.htm "First" "Last" "First2" "Last2"
+# The names of the two people you want messages between should be in
+# descending alphabetic order by last name (the dump is weirdly formatted)
+# and also capitalized so for example:
+# ./formatlogs messages.htm "Jane" "Doe" "John" "Boe"
+# DISCLAIMER this script will potentially not get perfect chronological
+# order of messages (I'm not doing any comparison of timestamps), it's
+# operating on the assumption that the messages in the original dump are in 
+# reverse chronological order split up by person but I have found that
+# this is only mostly true.
+
 sed 's/<span class="user">/\n/g' ${1} > temp1
 
-
-sed -n "/div class=\"thread\">${2}/=" temp1 > linenumbers
+sed -n "/div class=\"thread\">${2} ${3}, ${4} ${5}/=" temp1 > linenumbers
 
 x=0
 
@@ -21,7 +32,7 @@ done
 
 tac blocks* > temp0
 
-egrep "^(Patrick|Fatema)" temp0 > temp1
+egrep "^(${2}|{$4})" temp0 > temp1
 
 sed 's/<\/span><span class="meta">/\n/g' temp1 > temp2
 
@@ -35,7 +46,7 @@ sed 's/&quot;/"/g' temp5 > temp6
 
 sed 's/<\/p><\/div><div class="thread">.*<div class="message"><div class="message_header">/\n/g' temp6 > temp7
 
-sed 's/&lt;/</g' temp7 > fulltext
+sed 's/&lt;/</g' temp7 > logs.txt
 
 rm linenumbers
 rm temp*
