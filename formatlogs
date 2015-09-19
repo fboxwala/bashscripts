@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [ $# -ne 2 ]; then
+    echo "usage: $0 messages.htm \"Name One, Name Two\"" 1>&2
+    exit 1
+fi
+
 sed 's/<span class="user">/\n/g' ${1} > temp1
 
 
