@@ -1,9 +1,20 @@
 #!/bin/bash
 
-sed 's/<span class="user">/\n/g' ${1} > temp1
+# this script is for extracting and formatting facebook messages between two people (party A and party B) 
+# the original logs are obtained by downloading a copy of your facebook data
+# party A is the person whose facebook account data is being used
+# usage: ./formatlogs.sh FILE AFIRST ALAST BFIRST BLAST
+FILE=$1 #the path to the file containing the unformatted messages
+AFIRST=$2 #first name of party A (the person whose facebook data was downloaded)
+ALAST="$3,"  #last name of party A 
+BFIRST=$4 #first name of party B
+BLAST=$5 #last name of party B
+PAIR="$AFIRST $ALAST $BFIRST $BLAST" #the actual string used
+
+sed 's/<span class="user">/\n/g' $FILE > temp1
 
 
-sed -n "/div class=\"thread\">${2}/=" temp1 > linenumbers
+sed -n "/div class=\"thread\">$PAIR/=" temp1 > linenumbers
 
 x=0
 
@@ -21,7 +32,7 @@ done
 
 tac blocks* > temp0
 
-egrep "^(Patrick|Fatema)" temp0 > temp1
+egrep "^($BFIRST|$AFIRST)" temp0 > temp1
 
 sed 's/<\/span><span class="meta">/\n/g' temp1 > temp2
 
