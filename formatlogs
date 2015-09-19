@@ -1,20 +1,38 @@
 #!/bin/bash
 
+# this script is for extracting and formatting facebook messages between two people (party A and party B) 
+# the original logs are obtained by downloading a copy of your facebook data
+# party A is the person whose facebook account data is being used
+# usage: ./formatlogs.sh FILE AFIRST ALAST BFIRST BLAST
+FILE=$1 #the path to the file containing the unformatted messages
+AFIRST=$2 #first name of party A (the person whose facebook data was downloaded)
+ALAST="$3,"  #last name of party A 
+BFIRST=$4 #first name of party B
+BLAST=$5 #last name of party B
+PAIR="$AFIRST $ALAST $BFIRST $BLAST" #the actual string used
+
+sed 's/<span class="user">/\n/g' $FILE > temp1
+
+
+sed -n "/div class=\"thread\">$PAIR/=" temp1 > linenumbers
+
 x=0
 
 for line in `cat linenumbers`; do
 
-tail -n +${line} temp1  > block${x}
+    tail -n +${line} temp1  > block${x}
 
-l=`grep -n "<div class=\"thread\">" block${x} | cut -f1 -d: | head -2 | tail -n +2`
+    l=`grep -n "<div class=\"thread\">" block${x} | cut -f1 -d: | head -2 | tail -n +2`
 
-head -${l} block${x} > blocks${x}
+    head -${l} block${x} > blocks${x}
 
-x=$(($x+1))
+    x=$(($x+1))
 
 done
 
 tac blocks* > temp0
+
+egrep "^($BFIRST|$AFIRST)" temp0 > temp1
 
 sed 's/<\/span><span class="meta">/\n/g' temp1 > temp2
 
@@ -28,9 +46,8 @@ sed 's/&quot;/"/g' temp5 > temp6
 
 sed 's/<\/p><\/div><div class="thread">.*<div class="message"><div class="message_header">/\n/g' temp6 > temp7
 
-sed 's/&lt;/</g' temp7 > logs.txt
+sed 's/&lt;/</g' temp7 > fulltext
 
 rm linenumbers
 rm temp*
 rm block*
-
