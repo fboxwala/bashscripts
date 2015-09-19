@@ -4,6 +4,13 @@
 # the original logs are obtained by downloading a copy of your facebook data
 # party A is the person whose facebook account data is being used
 # usage: ./formatlogs.sh FILE AFIRST ALAST BFIRST BLAST
+
+if [ $# -ne 5 ]; then
+    echo "usage: $0 path/to/messages.htm AFIRST ALAST BFIRST BLAST" 1>&2
+    exit 1
+fi
+
+
 FILE=$1 #the path to the file containing the unformatted messages
 AFIRST=$2 #first name of party A (the person whose facebook data was downloaded)
 ALAST="$3,"  #last name of party A 
