@@ -18,14 +18,18 @@ BFIRST=$4 #first name of party B
 BLAST=$5 #last name of party B
 PAIR="$AFIRST $ALAST $BFIRST $BLAST" #the actual string used
 
+echo "negotiating relineations..."
 sed 's/<span class="user">/\n/g' $FILE > temp1
 
 
+echo "surveying message threading... triplicating results..."
 sed -n "/div class=\"thread\">$PAIR/=" temp1 > linenumbers
 
 x=0
 
+echo "preparing control flow..."
 for line in `cat linenumbers`; do
+    echo "enacting partitioning scheme..."
 
     tail -n +${line} temp1  > block${x}
 
@@ -37,24 +41,34 @@ for line in `cat linenumbers`; do
 
 done
 
+echo "temporal distillation in effect..."
 tac blocks* > temp0
 
+echo "personalizing results..."
 egrep "^($BFIRST|$AFIRST)" temp0 > temp1
 
+echo "removing meta..."
 sed 's/<\/span><span class="meta">/\n/g' temp1 > temp2
 
+echo "antispanning... reconciliating divides..."
 sed 's/<\/span><\/div><\/div><p>/\n\n/g' temp2 > temp3
 
+echo "stripping headers..."
 sed 's/<\/p><div class="message"><div class="message_header">/\n/g' temp3 > temp4
 
+echo "achieving escape... \`"
 sed 's/&#039;/`/g' temp4 > temp5
 
+echo 'achieving escape... "'
 sed 's/&quot;/"/g' temp5 > temp6
 
+echo "disabling safeguards..."
 sed 's/<\/p><\/div><div class="thread">.*<div class="message"><div class="message_header">/\n/g' temp6 > temp7
 
+echo "achieving escape... <"
 sed 's/&lt;/</g' temp7 > fulltext
 
+echo "destroying evidence..."
 rm linenumbers
 rm temp*
 rm block*
