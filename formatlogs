@@ -2,8 +2,11 @@
 
 # this script is for extracting and formatting facebook messages between two people (party A and party B) 
 # the original logs are obtained by downloading a copy of your facebook data
-# party A is the person whose facebook account data is being used
-# usage: ./formatlogs.sh FILE AFIRST ALAST BFIRST BLAST
+# the script may not output logs in perfect chronological order, it was written under the assumption that the data
+# dumps contain conversations in reverse chronological order split by person, but this is not _always_ true
+# party A should be the person who's last name comes LATER in the alphabet:
+
+# usage: ./formatlogs.sh FILE "Anna" "Zed" "Joe" "Apple"
 
 if [ $# -ne 5 ]; then
     echo "usage: $0 path/to/messages.htm AFIRST ALAST BFIRST BLAST" 1>&2
@@ -66,7 +69,7 @@ echo "disabling safeguards..."
 sed 's/<\/p><\/div><div class="thread">.*<div class="message"><div class="message_header">/\n/g' temp6 > temp7
 
 echo "achieving escape... <"
-sed 's/&lt;/</g' temp7 > fulltext
+sed 's/&lt;/</g' temp7 > "${AFIRST}-${BFIRST}-logs.txt"
 
 echo "destroying evidence..."
 rm linenumbers
